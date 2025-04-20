@@ -1,0 +1,30 @@
+Given this image:
+Following this format:
+Reference Example:
+Detailed and Structured Description (~250 tokens):
+[Your detailed description here]
+⸻\n
+Pixel Artist’s Vivid & Beautiful Description:
+[Your pixel artist description here]
+PROMPT:
+1. First, describe the image at least 250 tokens
+2. Then, as a pixel art draw, re-describe the image again but make it more vivid and beautiful
+CONTEXT/EXAMPLE:
+Detailed and Structured Description (~250 tokens):
+The image captures an event stage setup for HackDavis, specifically marked by large, golden helium balloons that spell out “HD 25.” Centrally positioned, a sturdy wooden podium with flower arrangements on top commands attention, prepared for speakers or event announcements. Behind it, a massive digital display is partially visible, showing a countdown timer with large numbers in greenish-blue, indicating the event is ongoing or about to conclude.
+
+The stage is modestly decorated: beneath the balloons, a row of alternating blue and yellow decorative streamers runs horizontally, adding a festive and cheerful atmosphere. Along the front of the stage hangs a colorful promotional banner for “HackDavis,” designed with playful graphics of animals, clouds, and greenery, emphasizing the hackathon’s creative and community-oriented theme: “//create for social good.” The banner also includes social media tags, enhancing interactivity.
+
+Surrounding the podium, minimalistic yet functional safety railings are present, taped with reflective black and yellow warning stripes to denote caution and guide foot traffic safely. The background and sides feature a black curtain backdrop, focusing audience attention forward. Lighting overhead is bright and clear, highlighting the decor and contributing to a professional yet energetic ambiance. People are partially visible at the far-right background, suggesting a lively crowd or audience.
+
+⸻
+
+Pixel Artist’s Vivid & Beautiful Description:
+
+Envision a pixel art canvas capturing the joyous and spirited atmosphere of a vibrant hackathon stage at HackDavis. Gold balloons gently float above, shimmering in pixelated brilliance to form the celebratory letters “HD 25.” At the heart of the stage, a charming wooden podium rendered in warm, nostalgic earth tones sits adorned with dainty, pixel-perfect flowers in pastel shades—delicate whites, soft pinks, and hints of lavender.
+
+Just behind, a giant digital screen glows vividly in retro, teal-hued numbers, pixel-by-pixel marking the thrilling countdown. Below, a playful tapestry of blue and yellow ribbon-like streamers drapes elegantly, animated by imaginary breezes that lend gentle motion to the scene.
+
+The lower banner is an enchanting pixelated landscape, boasting cute and whimsical characters like smiling rabbits, cheerful clouds drifting lazily through pastel-blue skies, and lush, grassy terrains that delight the eye. Clearly marked “//create for social good,” each pixel resonates with creativity and communal warmth, complemented by social media icons that subtly pulse with interactivity.
+
+Safety rails outlined by sharp, contrasting black-and-yellow pixels frame the stage edges, guiding attendees with friendly precision. Softly illuminated pixel lights cast a welcoming glow, bathing the entire scene in a comfortable yet energizing brightness, hinting at the bustling crowd beyond—a scene alive with imagination, community spirit, and digital camaraderie.
