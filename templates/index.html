@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gemini Image Analyzer</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .analyze-section { margin-bottom: 40px; }
+        .result-box { margin-bottom: 10px; padding: 10px; border: 1px solid #ccc; background: #f9f9f9; min-height: 40px; }
+        button { padding: 10px 20px; font-size: 16px; }
+    </style>
+</head>
+<body>
+    <h1>Gemini Image Analyzer</h1>
+    <div class="analyze-section" id="section-1">
+        <div class="result-box" id="result-1"></div>
+        <button onclick="analyzeImage(1)">analyze 1</button>
+    </div>
+    <div class="analyze-section" id="section-2">
+        <div class="result-box" id="result-2"></div>
+        <button onclick="analyzeImage(2)">analyze 2</button>
+    </div>
+    <div class="analyze-section" id="section-3">
+        <div class="result-box" id="result-3"></div>
+        <button onclick="analyzeImage(3)">analyze 3</button>
+    </div>
+    <script>
+        function analyzeImage(imageId) {
+            const resultBox = document.getElementById('result-' + imageId);
+            resultBox.textContent = "Analyzing...";
+            fetch('/analyze-image', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ image_id: imageId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.result) {
+                    resultBox.textContent = data.result;
+                } else if (data.error) {
+                    resultBox.textContent = "Error: " + data.error;
+                } else {
+                    resultBox.textContent = "Unknown error.";
+                }
+            })
+            .catch(err => {
+                resultBox.textContent = "Request failed: " + err;
+            });
+        }
+    </script>
+</body>
+</html>
