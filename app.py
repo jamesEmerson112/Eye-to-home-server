@@ -106,6 +106,8 @@ def generate_image_route():
 import threading
 import time
 
+import json
+
 def background_generate_image_worker():
     while True:
         txt_files = sorted(glob.glob("output/*.txt"), key=os.path.getmtime, reverse=True)
@@ -115,11 +117,26 @@ def background_generate_image_worker():
                 prompt = f.read()
             result = generate_image(prompt)
             print(f"Processed {txt_file} with generate_image. Result: {result}")
+            # Save the latest result for polling
+            try:
+                with open("output/generated_image.json", "w", encoding="utf-8") as out_f:
+                    json.dump(result, out_f)
+            except Exception as e:
+                print(f"Warning: Failed to save generated image result: {e}")
             try:
                 os.remove(txt_file)
             except Exception as e:
                 print(f"Warning: Failed to delete used prompt file {txt_file}: {e}")
         time.sleep(5)
+
+@app.route("/latest_generated_image", methods=["GET"])
+def latest_generated_image():
+    try:
+        with open("output/generated_image.json", "r", encoding="utf-8") as f:
+            data = json.load(f)
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({"error": f"No generated image available: {e}"}), 404
 
 if __name__ == "__main__":
     threading.Thread(target=background_generate_image_worker, daemon=True).start()
