@@ -12,17 +12,12 @@
 </head>
 <body>
     <h1>Gemini Image Analyzer</h1>
-    <div class="analyze-section" id="section-1">
-        <div class="result-box" id="result-1"></div>
-        <button onclick="analyzeImage(1)">analyze 1</button>
-    </div>
-    <div class="analyze-section" id="section-2">
-        <div class="result-box" id="result-2"></div>
-        <button onclick="analyzeImage(2)">analyze 2</button>
-    </div>
-    <div class="analyze-section" id="section-3">
-        <div class="result-box" id="result-3"></div>
-        <button onclick="analyzeImage(3)">analyze 3</button>
+    <div class="analyze-section" id="section-upload">
+        <form id="upload-form" enctype="multipart/form-data">
+            <input type="file" id="image-upload" accept="image/*" required>
+            <button type="submit">Upload & Analyze</button>
+        </form>
+        <div class="result-box" id="upload-result"></div>
     </div>
     <!-- Marked.js for Markdown rendering -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -31,19 +26,28 @@
         <button onclick="testGenerateImage()">Test Generate Image</button>
     </div>
     <script>
-        function analyzeImage(imageId) {
-            const resultBox = document.getElementById('result-' + imageId);
-            resultBox.textContent = "Analyzing...";
+        // Handle image upload and analysis
+        document.getElementById('upload-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const resultBox = document.getElementById('upload-result');
+            const fileInput = document.getElementById('image-upload');
+            if (!fileInput.files || fileInput.files.length === 0) {
+                resultBox.textContent = "Please select an image to upload.";
+                return;
+            }
+            const formData = new FormData();
+            formData.append('image', fileInput.files[0]);
+            resultBox.textContent = "Uploading and analyzing...";
             fetch('/analyze-image', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ image_id: imageId })
+                body: formData
             })
             .then(response => response.json())
             .then(data => {
                 if (data.result) {
-                    // Render markdown as HTML
-                    resultBox.innerHTML = marked.parse(data.result);
+                    // Render markdown as HTML with a success message
+                    resultBox.innerHTML = "<div style='color: green; font-weight: bold;'>Success! Image uploaded and analyzed.</div>" +
+                                          marked.parse(data.result);
                 } else if (data.error) {
                     resultBox.textContent = "Error: " + data.error;
                 } else {
@@ -53,7 +57,7 @@
             .catch(err => {
                 resultBox.textContent = "Request failed: " + err;
             });
-        }
+        });
 
         function testGenerateImage() {
             const resultBox = document.getElementById('generate-result');
