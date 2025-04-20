@@ -24,6 +24,12 @@
         <div class="result-box" id="result-3"></div>
         <button onclick="analyzeImage(3)">analyze 3</button>
     </div>
+    <!-- Marked.js for Markdown rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <div class="analyze-section" id="section-generate">
+        <div class="result-box" id="generate-result"></div>
+        <button onclick="testGenerateImage()">Test Generate Image</button>
+    </div>
     <script>
         function analyzeImage(imageId) {
             const resultBox = document.getElementById('result-' + imageId);
@@ -36,7 +42,53 @@
             .then(response => response.json())
             .then(data => {
                 if (data.result) {
-                    resultBox.textContent = data.result;
+                    // Render markdown as HTML
+                    resultBox.innerHTML = marked.parse(data.result);
+                } else if (data.error) {
+                    resultBox.textContent = "Error: " + data.error;
+                } else {
+                    resultBox.textContent = "Unknown error.";
+                }
+            })
+            .catch(err => {
+                resultBox.textContent = "Request failed: " + err;
+            });
+        }
+
+        function testGenerateImage() {
+            const resultBox = document.getElementById('generate-result');
+            resultBox.textContent = "Generating image...";
+            fetch('/generate_image', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Check for new Freepik API format with base64 image
+                if (data.data && Array.isArray(data.data) && data.data.length > 0 && data.data[0].base64) {
+                    const imgElem = document.createElement('img');
+                    imgElem.src = "data:image/png;base64," + data.data[0].base64;
+                    imgElem.alt = "Generated Image";
+                    imgElem.style.maxWidth = "512px";
+                    imgElem.style.display = "block";
+                    imgElem.style.marginBottom = "10px";
+                    resultBox.innerHTML = "";
+                    resultBox.appendChild(imgElem);
+                } else if (data.data && data.data.generated && data.data.generated.length > 0) {
+                    // Legacy: Show the generated image(s) from .url
+                    resultBox.innerHTML = "";
+                    data.data.generated.forEach(function(img) {
+                        const imgElem = document.createElement('img');
+                        imgElem.src = img.url;
+                        imgElem.alt = "Generated Image";
+                        imgElem.style.maxWidth = "512px";
+                        imgElem.style.display = "block";
+                        imgElem.style.marginBottom = "10px";
+                        resultBox.appendChild(imgElem);
+                    });
+                } else if (data.data && data.data.status) {
+                    resultBox.innerHTML = "<b>Status:</b> " + data.data.status + "<br><b>Task ID:</b> " + data.data.task_id;
                 } else if (data.error) {
                     resultBox.textContent = "Error: " + data.error;
                 } else {
