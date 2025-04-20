@@ -54,9 +54,40 @@ def analyze_image():
                 prompt,
             ],
         )
+
+        # Extract and cache the pixel artist description
+        marker = "Pixel Artist’s Vivid & Beautiful Description:"
+        output_dir = "output"
+        output_path = os.path.join(output_dir, f"{image_id}.txt")
+        pixel_desc = ""
+        if marker in result.text:
+            pixel_desc = result.text.split(marker, 1)[1].strip()
+            os.makedirs(output_dir, exist_ok=True)
+            with open(output_path, "w", encoding="utf-8") as f:
+                f.write(pixel_desc)
+
         return jsonify({"result": result.text})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+from generate_image_impl import generate_image
+
+@app.route("/generate_image", methods=["POST"])
+def generate_image_route():
+    data = request.get_json(silent=True)
+    prompt = None
+    if data and "prompt" in data:
+        prompt = data["prompt"]
+    else:
+        # For testing, read prompt from output/2.txt if not provided
+        try:
+            with open("output/2.txt", "r", encoding="utf-8") as f:
+                prompt = f.read()
+        except Exception as e:
+            return jsonify({"error": f"Failed to read output/2.txt: {e}"}), 500
+    result = generate_image(prompt)
+    print(result)
+    return jsonify(result)
 
 if __name__ == "__main__":
     app.run(debug=True, port=5001)
