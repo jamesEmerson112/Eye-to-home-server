@@ -31,7 +31,9 @@ def analyze_image():
 
     # Save uploaded file to images/ directory
     filename = secure_filename(image_file.filename)
-    save_path = os.path.join("images", filename)
+    images_dir = "uploads"
+    os.makedirs(images_dir, exist_ok=True)
+    save_path = os.path.join(images_dir, filename)
     image_file.save(save_path)
 
     # Read prompt from custom_instruction.txt
@@ -129,6 +131,51 @@ def background_generate_image_worker():
                 print(f"Warning: Failed to delete used prompt file {txt_file}: {e}")
         time.sleep(5)
 
+def background_analyze_image_worker():
+    uploads_dir = "uploads"
+    os.makedirs(uploads_dir, exist_ok=True)
+    while True:
+        image_files = sorted(glob.glob(os.path.join(uploads_dir, "*.*")), key=os.path.getmtime)
+        for image_path in image_files:
+            filename = os.path.basename(image_path)
+            print(f"Auto-analyzing uploaded image: {filename}")
+            # Read prompt from custom_instruction.txt
+            try:
+                with open("custom_instruction.txt", "r", encoding="utf-8") as f:
+                    prompt = f.read()
+            except Exception as e:
+                print(f"Failed to read custom_instruction.txt: {e}")
+                continue
+            try:
+                myfile = client.files.upload(file=image_path)
+                result = client.models.generate_content(
+                    model="gemini-2.0-flash",
+                    contents=[
+                        myfile,
+                        "\n\n",
+                        prompt,
+                    ],
+                )
+                # Extract and cache the pixel artist description
+                marker = "Pixel Artist’s Vivid & Beautiful Description:"
+                output_dir = "output"
+                output_path = os.path.join(output_dir, f"{os.path.splitext(filename)[0]}.txt")
+                pixel_desc = ""
+                if marker in result.text:
+                    pixel_desc = result.text.split(marker, 1)[1].strip()
+                    os.makedirs(output_dir, exist_ok=True)
+                    with open(output_path, "w", encoding="utf-8") as f:
+                        f.write(pixel_desc)
+                print(f"Analysis complete for {filename}. Result cached to {output_path}")
+            except Exception as e:
+                print(f"Error analyzing {filename}: {e}")
+            # Delete the image after processing
+            try:
+                os.remove(image_path)
+            except Exception as e:
+                print(f"Warning: Failed to delete uploaded image {image_path}: {e}")
+        time.sleep(5)
+
 @app.route("/latest_generated_image", methods=["GET"])
 def latest_generated_image():
     try:
@@ -140,4 +187,5 @@ def latest_generated_image():
 
 if __name__ == "__main__":
     threading.Thread(target=background_generate_image_worker, daemon=True).start()
+    threading.Thread(target=background_analyze_image_worker, daemon=True).start()
     app.run(debug=True, port=5001)
