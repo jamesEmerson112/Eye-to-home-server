@@ -22,7 +22,9 @@ def generate_image(prompt):
         "image": {"size": "smartphone_horizontal_20_9"},
         "num_images": 1,
         "prompt": prompt,
-        "styling": {"style": "pixel-art"}
+        "styling": {"style": "pixel-art"},
+        "realism": "true",
+        "creative_detailing": 1
     }
 
     # Debug: print the prompt and payload
