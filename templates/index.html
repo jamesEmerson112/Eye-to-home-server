@@ -3,26 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <title>Gemini Image Analyzer</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 40px; }
-        .analyze-section { margin-bottom: 40px; }
-        .result-box { margin-bottom: 10px; padding: 10px; border: 1px solid #ccc; background: #f9f9f9; min-height: 40px; }
-        button { padding: 10px 20px; font-size: 16px; }
-    </style>
+    <link href="/static/css/output.css" rel="stylesheet">
 </head>
-<body>
-    <h1>Gemini Image Analyzer</h1>
-    <div class="analyze-section" id="section-generate">
-        <div class="result-box" id="generate-result"></div>
-        <button onclick="testGenerateImage()">Test Generate Image</button>
-        <button onclick="startPollingGeneratedImage()">Start Polling for Generated Image</button>
+<body class="font-sans m-10">
+    <h1 class="text-3xl font-bold mb-6">Gemini Image Analyzer</h1>
+    <div class="mb-10" id="section-generate">
+        <div class="mb-2.5 p-2.5 border border-gray-300 bg-gray-100 min-h-[40px]" id="generate-result"></div>
+        <button onclick="testGenerateImage()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2">
+            Test Generate Image
+        </button>
+        <button onclick="startPollingGeneratedImage()" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+            Start Polling for Generated Image
+        </button>
     </div>
-    <div class="analyze-section" id="section-upload">
-        <form id="upload-form" enctype="multipart/form-data">
-            <input type="file" id="image-upload" accept="image/*" required>
-            <button type="submit">Upload & Analyze</button>
+    <div class="mb-10" id="section-upload">
+        <form id="upload-form" enctype="multipart/form-data" class="mb-4">
+            <input type="file" id="image-upload" accept="image/*" required class="block mb-4">
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Upload & Analyze
+            </button>
         </form>
-        <div class="result-box" id="upload-result"></div>
+        <div class="mb-2.5 p-2.5 border border-gray-300 bg-gray-100 min-h-[40px]" id="upload-result"></div>
     </div>
     <!-- Marked.js for Markdown rendering -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -47,7 +48,7 @@
             .then(data => {
                 if (data.result) {
                     // Render markdown as HTML with a success message
-                    resultBox.innerHTML = "<div style='color: green; font-weight: bold;'>Success! Image uploaded and analyzed.</div>" +
+                    resultBox.innerHTML = "<div class='text-green-600 font-bold mb-2'>Success! Image uploaded and analyzed.</div>" +
                                           marked.parse(data.result);
                 } else if (data.error) {
                     resultBox.textContent = "Error: " + data.error;
@@ -75,9 +76,7 @@
                     const imgElem = document.createElement('img');
                     imgElem.src = "data:image/png;base64," + data.data[0].base64;
                     imgElem.alt = "Generated Image";
-                    imgElem.style.maxWidth = "512px";
-                    imgElem.style.display = "block";
-                    imgElem.style.marginBottom = "10px";
+                    imgElem.className = "max-w-md mb-2.5";
                     resultBox.innerHTML = "";
                     resultBox.appendChild(imgElem);
                 } else if (data.data && data.data.generated && data.data.generated.length > 0) {
@@ -87,9 +86,7 @@
                         const imgElem = document.createElement('img');
                         imgElem.src = img.url;
                         imgElem.alt = "Generated Image";
-                        imgElem.style.maxWidth = "512px";
-                        imgElem.style.display = "block";
-                        imgElem.style.marginBottom = "10px";
+                        imgElem.className = "max-w-md mb-2.5";
                         resultBox.appendChild(imgElem);
                     });
                 } else if (data.data && data.data.status) {
@@ -120,9 +117,7 @@
                             const imgElem = document.createElement('img');
                             imgElem.src = "data:image/png;base64," + data.data[0].base64;
                             imgElem.alt = "Generated Image";
-                            imgElem.style.maxWidth = "512px";
-                            imgElem.style.display = "block";
-                            imgElem.style.marginBottom = "10px";
+                            imgElem.className = "max-w-md mb-2.5";
                             resultBox.innerHTML = "";
                             resultBox.appendChild(imgElem);
                         } else if (data.data && data.data.generated && data.data.generated.length > 0) {
@@ -132,9 +127,7 @@
                                 const imgElem = document.createElement('img');
                                 imgElem.src = img.url;
                                 imgElem.alt = "Generated Image";
-                                imgElem.style.maxWidth = "512px";
-                                imgElem.style.display = "block";
-                                imgElem.style.marginBottom = "10px";
+                                imgElem.className = "max-w-md mb-2.5";
                                 resultBox.appendChild(imgElem);
                             });
                         } else if (data.data && data.data.status) {

@@ -1,0 +1,22 @@
+{
+  "name": "eye-to-home-server",
+  "version": "1.0.0",
+  "description": "This project is a full-stack web application that leverages both Google Gemini and Freepik AI APIs to analyze images, generate creative pixel art, and provide a seamless user experience through a Flask backend and a dynamic HTML/JavaScript frontend.",
+  "main": "index.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "build-css": "npx tailwindcss -i ./static/css/input.css -o ./static/css/output.css --minify",
+      "watch-css": "npx tailwindcss -i ./static/css/input.css -o ./static/css/output.css --watch"
+    },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^4.1.4"
+  },
+  "devDependencies": {
+    "postcss-cli": "^11.0.1"
+  }
+}

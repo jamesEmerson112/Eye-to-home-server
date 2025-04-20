@@ -1,2 +1,21 @@
 .env
 __pycache__/generate_image_impl.cpython-313.pyc
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnp
+.pnp.js
+.env.local
+.parcel-cache/
+.next/
+.nuxt/
+dist/
+coverage/
+.turbo/
+.vercel/
+.output/
+.cache/
+.eslintcache
